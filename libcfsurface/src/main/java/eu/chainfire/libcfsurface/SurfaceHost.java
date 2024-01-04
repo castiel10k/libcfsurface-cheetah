@@ -15,6 +15,10 @@
 
 package eu.chainfire.libcfsurface;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -104,6 +108,8 @@ public abstract class SurfaceHost {
         }
         return false;
     }
+
+
 
     private final boolean initSurface() {
         // Note that it is often possible just to include a Java file from AOSP in your own
@@ -216,8 +222,9 @@ public abstract class SurfaceHost {
                 TODO: Replace these hard-coded dimensions with proper logic for determining screen dimensions at boot time.
                       The code commented out above this should help serve as a starting point.
              */
-            mWidth = 1440;
-            mHeight = 3120;
+
+            mWidth = ScreenUtils.getScreenWidth(mContext.getApplicationContext());
+            mHeight = ScreenUtils.getScreenHeight(mContext.getApplicationContext());
             checkRotation();
 
             // Create SurfaceControl

@@ -237,7 +237,7 @@ public abstract class SurfaceHost {
             //Log.d("Reconstructed JSON", reconstructedJson);
             try {
                 // Read data from file
-                String fileContent = readFileFromInternalStorage(this, fileName);
+                String fileContent = readFileFromInternalStorage(Context.MODE_PRIVATE, fileName);
 
                 // Display the file content in the log
                 Log.d("File Content", fileContent);
@@ -246,7 +246,7 @@ public abstract class SurfaceHost {
                 e.printStackTrace();
                 // Handle IOException if there is an issue reading the file
             }
-            
+
             mWidth = 3120;
             mHeight = 1440;
             //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();

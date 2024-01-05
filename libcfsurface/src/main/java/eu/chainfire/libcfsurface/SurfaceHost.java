@@ -385,7 +385,7 @@ public abstract class SurfaceHost {
     }
     private String readToFileInDocuments() {
         String fileName = "liveboot.txt";
-        String test = null;
+        String test = "3120;1440";
 
         // Get the Documents directory on external storage
         File documentsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
@@ -398,7 +398,7 @@ public abstract class SurfaceHost {
             FileInputStream fos = new FileInputStream(file);
 
             // Write the content to the file
-            test = String.valueOf(fos.read());
+            //test = String.valueOf(fos.read());
 
             // Close the FileOutputStream
             fos.close();

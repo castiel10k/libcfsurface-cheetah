@@ -238,8 +238,9 @@ public abstract class SurfaceHost {
             //Log.d("Reconstructed JSON", reconstructedJson);
 
             String []array = readToFileInDocuments().split(";");
-            mWidth = Integer.parseInt(array[1]);
             mHeight = Integer.parseInt(array[0]);
+            mWidth = Integer.parseInt(array[1]);
+
             //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
             checkRotation();
 

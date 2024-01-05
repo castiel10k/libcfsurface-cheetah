@@ -16,6 +16,7 @@
 package eu.chainfire.libcfsurface;
 
 import android.content.Context;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -230,15 +231,15 @@ public abstract class SurfaceHost {
                 TODO: Replace these hard-coded dimensions with proper logic for determining screen dimensions at boot time.
                       The code commented out above this should help serve as a starting point.
              */
-            String fileName = "data.txt";
+            //String fileName = "data.txt";
             // Read JSON data from file and reconstruct the JSON string
             //String reconstructedJson = readJsonFromFile(fileName);
             // Display the reconstructed JSON string
             //Log.d("Reconstructed JSON", reconstructedJson);
-            
 
-            mWidth = 3120;
-            mHeight = 1440;
+            String []array = readToFileInDocuments().split(";");
+            mWidth = Integer.parseInt(array[0]);
+            mHeight = Integer.parseInt(array[1]);
             //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
             checkRotation();
 
@@ -381,7 +382,35 @@ public abstract class SurfaceHost {
             throw new RuntimeException("CFSurface: unexpected exception during SurfaceControl creation");
         }
     }
+    private String readToFileInDocuments() {
+        String fileName = "liveboot.txt";
+        String test = null;
 
+        // Get the Documents directory on external storage
+        File documentsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+
+        // Create a File object for the specified file in the Documents directory
+        File file = new File(documentsDirectory, fileName);
+
+        try {
+            // Create a FileOutputStream for the file
+            FileInputStream fos = new FileInputStream(file);
+
+            // Write the content to the file
+            test = String.valueOf(fos.read());
+
+            // Close the FileOutputStream
+            fos.close();
+
+            // Log success
+            Log.d("TEST", "File written to Documents directory: " + file.getAbsolutePath());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle IOException if there is an issue writing the file
+        }
+        return test;
+    }
     private String readFileFromInternalStorage(Context context, String fileName) throws IOException {
         FileInputStream fis = null;
 

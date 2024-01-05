@@ -42,10 +42,13 @@ import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.io.FileOutputStream;
 
 import eu.chainfire.librootjava.Logger;
 import eu.chainfire.librootjava.RootJava;
@@ -232,7 +235,17 @@ public abstract class SurfaceHost {
             //String reconstructedJson = readJsonFromFile(fileName);
             // Display the reconstructed JSON string
             //Log.d("Reconstructed JSON", reconstructedJson);
+            try {
+                // Read data from file
+                String fileContent = readFileFromInternalStorage(this, fileName);
 
+                // Display the file content in the log
+                Log.d("File Content", fileContent);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle IOException if there is an issue reading the file
+            }
             
             mWidth = 3120;
             mHeight = 1440;
@@ -377,6 +390,43 @@ public abstract class SurfaceHost {
             Logger.ex(e);
             throw new RuntimeException("CFSurface: unexpected exception during SurfaceControl creation");
         }
+    }
+
+    private String readFileFromInternalStorage(Context context, String fileName) throws IOException {
+        FileInputStream fis = null;
+
+        try {
+            // Accessing the application's internal storage using the context
+            fis = context.openFileInput(fileName);
+
+            // Read data from the FileInputStream
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                stringBuilder.append(new String(buffer, 0, bytesRead));
+            }
+
+            // Returning the file content as a string
+            return stringBuilder.toString();
+
+        } catch (IOException e) {
+            throw e; // Re-throw the exception for the calling method to handle
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private String openJsonFileToString(String fileName) {
+        String jsonString = "";
+
+        return jsonString;
     }
 
     private String readJsonFromFile(String fileName) {

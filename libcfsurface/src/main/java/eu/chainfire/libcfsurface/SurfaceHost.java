@@ -37,7 +37,12 @@ import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Display;
 import android.view.Surface;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -222,9 +227,14 @@ public abstract class SurfaceHost {
                 TODO: Replace these hard-coded dimensions with proper logic for determining screen dimensions at boot time.
                       The code commented out above this should help serve as a starting point.
              */
-
-            mWidth = ScreenUtils.getScreenWidth(mContext.getApplicationContext());
-            mHeight = ScreenUtils.getScreenHeight(mContext.getApplicationContext());
+            String fileName = "data.txt";
+            // Read JSON data from file and reconstruct the JSON string
+            String reconstructedJson = readJsonFromFile(fileName);
+            // Display the reconstructed JSON string
+            Log.d("Reconstructed JSON", reconstructedJson);
+            mWidth = 3120;
+            mHeight = 1440;
+            Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
             checkRotation();
 
             // Create SurfaceControl
@@ -365,6 +375,35 @@ public abstract class SurfaceHost {
             Logger.ex(e);
             throw new RuntimeException("CFSurface: unexpected exception during SurfaceControl creation");
         }
+    }
+
+    private String readJsonFromFile(String fileName) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            // Accessing the application's internal storage
+            FileInputStream fis = new FileInputStream(new File(fileName));
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+
+            // Reading lines from the file and appending them to the StringBuilder
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+
+            // Closing the input streams
+            bufferedReader.close();
+            isr.close();
+            fis.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle any exceptions that may occur during file reading
+        }
+
+        // Returning the reconstructed JSON string
+        return stringBuilder.toString();
     }
 
     private final boolean doneSurface() {

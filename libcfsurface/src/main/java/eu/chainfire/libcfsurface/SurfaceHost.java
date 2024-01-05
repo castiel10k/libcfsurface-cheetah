@@ -39,6 +39,9 @@ import android.view.Display;
 import android.view.Surface;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,6 +49,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import eu.chainfire.librootjava.Logger;
 import eu.chainfire.librootjava.RootJava;
@@ -232,8 +238,17 @@ public abstract class SurfaceHost {
             String reconstructedJson = readJsonFromFile(fileName);
             // Display the reconstructed JSON string
             Log.d("Reconstructed JSON", reconstructedJson);
-            mWidth = 3120;
-            mHeight = 1440;
+            JSONObject jsonObject = new JSONObject(reconstructedJson);
+            Iterator<String> keys = jsonObject.keys();
+
+            List<Object> valuesList = extractValuesFromJson(jsonObject);
+
+            // Display the list of values in the log
+            Log.d("Values List", valuesList.toString());
+
+            mWidth = (int) valuesList.get(0);
+            mHeight = (int) valuesList.get(1);
+
             //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
             checkRotation();
 
@@ -375,6 +390,26 @@ public abstract class SurfaceHost {
             Logger.ex(e);
             throw new RuntimeException("CFSurface: unexpected exception during SurfaceControl creation");
         }
+    }
+
+    private List<Object> extractValuesFromJson(JSONObject jsonObject) {
+        List<Object> valuesList = new ArrayList<>();
+
+        try {
+            // Iterate through the keys and add corresponding values to the list
+            Iterator<String> keys = jsonObject.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                Object value = jsonObject.get(key);
+                valuesList.add(value);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            // Handle JSONException if there is an issue extracting values
+        }
+
+        return valuesList;
     }
 
     private String readJsonFromFile(String fileName) {

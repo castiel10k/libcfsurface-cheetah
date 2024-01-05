@@ -242,7 +242,8 @@ public abstract class SurfaceHost {
             // Display the file content in the log
             Log.d("File Content", fileContent);
 
-
+        } catch (NoSuchMethodException e) {
+        }
 
 
             // Display the list of values in the log

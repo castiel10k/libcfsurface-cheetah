@@ -235,17 +235,7 @@ public abstract class SurfaceHost {
             //String reconstructedJson = readJsonFromFile(fileName);
             // Display the reconstructed JSON string
             //Log.d("Reconstructed JSON", reconstructedJson);
-            try {
-                // Read data from file
-                String fileContent = readFileFromInternalStorage(Context.MODE_PRIVATE, fileName);
-
-                // Display the file content in the log
-                Log.d("File Content", fileContent);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Handle IOException if there is an issue reading the file
-            }
+            
 
             mWidth = 3120;
             mHeight = 1440;

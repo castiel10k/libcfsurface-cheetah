@@ -229,9 +229,11 @@ public abstract class SurfaceHost {
              */
             String fileName = "data.txt";
             // Read JSON data from file and reconstruct the JSON string
-            String reconstructedJson = readJsonFromFile(fileName);
+            //String reconstructedJson = readJsonFromFile(fileName);
             // Display the reconstructed JSON string
-            Log.d("Reconstructed JSON", reconstructedJson);
+            //Log.d("Reconstructed JSON", reconstructedJson);
+
+            
             mWidth = 3120;
             mHeight = 1440;
             //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();

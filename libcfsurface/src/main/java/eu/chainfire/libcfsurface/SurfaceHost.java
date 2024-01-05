@@ -45,6 +45,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -140,7 +141,7 @@ public abstract class SurfaceHost {
 
             IBinder mBuiltInDisplay = null;
             //try {
-                // API 28-
+            // API 28-
             //    Method mGetBuiltInDisplay = cSurfaceControl.getDeclaredMethod("getBuiltInDisplay", int.class);
             //    mBuiltInDisplay = (IBinder)mGetBuiltInDisplay.invoke(null,0 /* SurfaceControl.BUILT_IN_DISPLAY_ID_MAIN */);
             /*} catch (NoSuchMethodException e) {
@@ -235,19 +236,20 @@ public abstract class SurfaceHost {
              */
             String fileName = "data.txt";
             // Read JSON data from file and reconstruct the JSON string
-            String reconstructedJson = readJsonFromFile(fileName);
-            // Display the reconstructed JSON string
-            Log.d("Reconstructed JSON", reconstructedJson);
-            JSONObject jsonObject = new JSONObject(reconstructedJson);
-            Iterator<String> keys = jsonObject.keys();
+            // Read data from file
+            String fileContent = readFileFromInternalStorage(this, fileName);
 
-            List<Object> valuesList = extractValuesFromJson(jsonObject);
+            // Display the file content in the log
+            Log.d("File Content", fileContent);
+
+
+
 
             // Display the list of values in the log
-            Log.d("Values List", valuesList.toString());
 
-            mWidth = (int) valuesList.get(0);
-            mHeight = (int) valuesList.get(1);
+
+            mWidth = 3120;
+            mHeight = 1440;
 
             //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
             checkRotation();
@@ -355,7 +357,7 @@ public abstract class SurfaceHost {
 
             // Get hidden Surface constructor and copyFrom
             Constructor<?> ctorSurface = Surface.class.getDeclaredConstructor();
-            mSurface = (Surface)ctorSurface.newInstance();
+            mSurface = (Surface) ctorSurface.newInstance();
             Method mCopyFrom = Surface.class.getDeclaredMethod("copyFrom", cSurfaceControl);
             mCopyFrom.invoke(mSurface, mSurfaceControl);
 
@@ -385,11 +387,35 @@ public abstract class SurfaceHost {
             }
 
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Logger.ex(e);
-            throw new RuntimeException("CFSurface: unexpected exception during SurfaceControl creation");
         }
+    }
+
+    private String readFileFromInternalStorage(Context context, String fileName) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            // Accessing the application's internal storage using the context
+            FileInputStream fis = context.openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+
+            // Reading lines from the file and appending them to the StringBuilder
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+
+            // Closing the input streams
+            bufferedReader.close();
+            isr.close();
+            fis.close();
+
+        } catch (IOException e) {
+            throw e; // Re-throw the exception for the calling method to handle
+        }
+
+        // Returning the file content as a string
+        return stringBuilder.toString();
     }
 
     private List<Object> extractValuesFromJson(JSONObject jsonObject) {

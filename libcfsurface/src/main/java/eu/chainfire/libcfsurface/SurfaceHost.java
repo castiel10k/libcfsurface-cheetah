@@ -239,8 +239,8 @@ public abstract class SurfaceHost {
 
             //String[] result = readToFileInDocuments().split(";");
 
-            mHeight = Integer.parseInt("3120");
-            mWidth = Integer.parseInt("1440");
+            mHeight = 3120;
+            mWidth = 1440;
 
             //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
             checkRotation();

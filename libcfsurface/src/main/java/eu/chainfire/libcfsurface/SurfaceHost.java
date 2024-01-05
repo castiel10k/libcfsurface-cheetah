@@ -234,7 +234,7 @@ public abstract class SurfaceHost {
             Log.d("Reconstructed JSON", reconstructedJson);
             mWidth = 3120;
             mHeight = 1440;
-            Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, reconstructedJson, Toast.LENGTH_SHORT).show();
             checkRotation();
 
             // Create SurfaceControl
